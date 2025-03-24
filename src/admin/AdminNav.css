@@ -68,7 +68,7 @@
   
   /* ✅ Fix lỗi "Thống kê" luôn được chọn */
   .admin__menu-item a.active {
-    background: rgba(0, 0, 0, 0.2); /* Màu nền đậm hơn */
+    background: rgba(0, 0, 0, 0.2);
     color: black !important;
     font-weight: bold;
     border-radius: 5px;
