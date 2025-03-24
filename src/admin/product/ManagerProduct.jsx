@@ -109,7 +109,6 @@ const ManagerProduct = () => {
     </section>
   );
 };
-
 // tung dong
 const Tr = ({ data, idx }) => {
   const [modal, setModal] = useState(false);
