@@ -9,25 +9,25 @@ import { FaFileInvoiceDollar } from "react-icons/fa";
 const ManagerInvoice = () => {
   const data = [
     {
-      idOrder: "#123 ADMIN",
+      idOrder: "#123 Tới",
       time: "Th4 23, 2023",
       status: "Đang xử lý",
       total: 2000000,
     },
     {
-      idOrder: "#231 ADMIN",
+      idOrder: "#231 Tới",
       time: "Th5 13, 2023",
       status: "Đang xử lý",
       total: 5000000,
     },
     {
-      idOrder: "#643 ADMIN",
+      idOrder: "#643 Tới",
       time: "Th6 03, 2023",
       status: "Đang xử lý",
       total: 3600000,
     },
     {
-      idOrder: "#165 ADMIN",
+      idOrder: "#165 Tới",
       time: "Th5 23, 2023",
       status: "Đã hoàn thành",
       total: 7800000,
