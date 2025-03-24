@@ -110,5 +110,61 @@ const ManagerProduct = () => {
   );
 };
 
+// tung dong
+const Tr = ({ data, idx }) => {
+  const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
+
+  const [modalDelete, setModalDelete] = useState(false);
+  const toggleDelete = () => setModalDelete(!modalDelete);
+  return (
+    <>
+      <tr>
+        <td>{data?.id}</td>
+        <td>
+          <img src={data?.imgUrl} alt="product-img" />
+        </td>
+        <td>{data?.productName}</td>
+        <td>
+          {data?.productPrice.toLocaleString("it-IT", {
+            style: "currency",
+            currency: "VND",
+          })}
+        </td>
+        <td>{data?.quantity}</td>
+        <td>
+          <motion.div whileTap={{ scale: 1.2 }} onClick={() => setModal(true)}>
+            <Button color="warning">
+              <RiEdit2Fill />
+            </Button>
+          </motion.div>
+        </td>
+        <td>
+          <motion.div
+            whileTap={{ scale: 1.2 }}
+            onClick={() => setModalDelete(true)}
+          >
+            <Button color="danger">
+              <MdDelete />
+            </Button>
+          </motion.div>
+        </td>
+      </tr>
+      <EditProductModal
+        modal={modal}
+        setModal={setModal}
+        toggle={toggle}
+        data={data}
+      />
+      <DeleteProductModal
+        modal={modalDelete}
+        setModal={setModalDelete}
+        toggle={toggleDelete}
+        text={`sản phẩm ${data?.productName}`}
+        data={data}
+      />
+    </>
+  );
+};
 
 export default ManagerProduct;
