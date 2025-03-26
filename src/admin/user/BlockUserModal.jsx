@@ -9,20 +9,6 @@ function BlockUserModal(props) {
   const dispatch = useDispatch();
 
   const handleBlockUser = async () => {
-    // const dataDelete = {
-    //   id: data?.id,
-    //   token: user?.accessToken,
-    // };
-    // try {
-    //   const res = await dispatch(deleteProduct(dataDelete)).unwrap();
-    //   if (res) {
-    //     setModal(false);
-    //     toast.success("Xóa sản phẩm thành công!");
-    //   }
-    // } catch (error) {
-    //   setModal(false);
-    //   toast.error("Có lỗi khi xảy ra!");
-    // }
     setModal(false);
     toast.success("Chặn người dùng thành công!");
   };
