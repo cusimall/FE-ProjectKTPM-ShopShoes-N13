@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {Button,Modal,ModalHeader,ModalBody,ModalFooter,Form,FormGroup,Input,Label,Col,} from "reactstrap";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { editProduct } from "../../redux/slices/managerProductSlice";
 import { useEffect } from "react";
 import axios from "axios";
 import { editUser } from "../../redux/slices/UserSlice";
