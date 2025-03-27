@@ -51,6 +51,61 @@ const EditUserModal = (props) => {
 
   return (
     <div>
+      <Modal isOpen={modal} toggle={toggle} size="xl">
+        <ModalHeader toggle={toggle}>
+          Chỉnh sửa thông tin người dùng:
+        </ModalHeader>
+        <ModalBody>
+          <Form>
+            <FormGroup row>
+              <Label sm={2}>Email:</Label>
+              <Col sm={10}>
+                <Input
+                  placeholder="Email"
+                  type="email"
+                  required
+                  name="email"
+                  value={dataEditUser.email}
+                  onChange={handleData}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row>
+              <Label sm={2}>Địa chỉ:</Label>
+              <Col sm={10}>
+                <Input
+                  placeholder="Địa chỉ"
+                  type="text"
+                  required
+                  name="address"
+                  value={dataEditUser.address}
+                  onChange={handleData}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row>
+              <Label sm={2}>Số điện thoại:</Label>
+              <Col sm={10}>
+                <Input
+                  type="number"
+                  required
+                  value={dataEditUser.phone}
+                  onChange={handleData}
+                  name="phone"
+                />
+              </Col>
+            </FormGroup>
+          </Form>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={() => handleEditData()}>
+            Lưu thay đổi
+          </Button>{" "}
+          <Button color="secondary" onClick={toggle}>
+            Hủy
+          </Button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 };
