@@ -48,9 +48,5 @@ const UserDashboard = () => {
     );
     dispatch(allUsers(res.data));
   };
-  useEffect(() => {
-    fetchAllUser(0);
-    fetchAllUserToExport();
-  }, [dispatch]);
 
   
