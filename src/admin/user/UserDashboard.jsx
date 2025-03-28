@@ -36,4 +36,21 @@ const UserDashboard = () => {
     });
     setUsersExport(res.data.data);
   };
-};
+
+  const fetchAllUser = async (page) => {
+    const res = await axios.get(
+      `http://localhost:8080/api/user/all?page=${page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user?.accessToken}`,
+        },
+      }
+    );
+    dispatch(allUsers(res.data));
+  };
+  useEffect(() => {
+    fetchAllUser(0);
+    fetchAllUserToExport();
+  }, [dispatch]);
+
+  
