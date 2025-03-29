@@ -48,5 +48,110 @@ const UserDashboard = () => {
     );
     dispatch(allUsers(res.data));
   };
+  useEffect(() => {
+    fetchAllUser(0);
+    fetchAllUserToExport();
+  }, [dispatch]);
 
-  
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    const searchedValue = newUsers?.filter((item) =>
+      item?.username?.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setSearchUser(searchedValue);
+  };
+
+  const handlePageChange = (e) => {
+    fetchAllUser(e.selected);
+    setSearchUser(null);
+  };
+
+  return (
+    <section className="manager-section">
+      <Container>
+        <div className="mt-3 manager">
+          <div className="manager-user">
+            <div>
+              <i class="ri-user-line"></i>
+            </div>
+            <h4>Quản lý người dùng</h4>
+          </div>
+          <div className="search-user">
+            <div className="search-box">
+              <input
+                type="text"
+                placeholder="Tìm kiếm username"
+                onChange={handleSearch}
+              />
+              <button className="search-btn">
+                <i className="ri-search-line"></i>
+              </button>
+            </div>
+
+            <div className="btn-file">
+              <ExportCSV csvData={newAll} fileName={"all-user"} />
+            </div>
+          </div>
+        </div>
+        <Row>
+          <div className="mt-5">
+            {newUsers?.length === 0 ? (
+              <h2 className="fs-4 text-center">
+                Chưa có người dùng
+                <Loading />
+              </h2>
+            ) : (
+              <>
+                <Table hover className="table bordered">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>Username</th>
+                      <th>E-Mail</th>
+                      <th>Địa chỉ</th>
+                      <th>Số điện thoại</th>
+                      <th>Giới tính</th>
+                      <th>Ngày sinh</th>
+                      <th>Xóa</th>
+                      <th>Sửa</th>
+                      <th>Chặn</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {searchUser
+                      ? searchUser?.map((item, idx) => (
+                          <Tr data={item} key={idx} idx={idx} />
+                        ))
+                      : newUsers?.map((item, idx) => (
+                          <Tr data={item} key={idx} idx={idx} />
+                        ))}
+                  </tbody>
+                </Table>
+                <ReactPaginate
+                  previousLabel="<"
+                  nextLabel=">"
+                  pageClassName="page-item"
+                  pageLinkClassName="page-link"
+                  previousClassName="page-item"
+                  previousLinkClassName="page-link"
+                  nextClassName="page-item"
+                  nextLinkClassName="page-link"
+                  breakLabel="..."
+                  breakClassName="page-item"
+                  breakLinkClassName="page-link"
+                  pageCount={totalPages}
+                  pageRangeDisplayed={5}
+                  onPageChange={handlePageChange}
+                  containerClassName="pagination"
+                  activeClassName="active"
+                />
+              </>
+            )}
+          </div>
+        </Row>
+      </Container>
+    </section>
+  );
+};
+
+export default UserDashboard;
