@@ -154,4 +154,90 @@ const UserDashboard = () => {
   );
 };
 
+const Tr = ({ data, idx }) => {
+  const [modal, setModal] = useState(false);
+  const user = useSelector((state) => state.auth?.currentUser);
+  const dispatch = useDispatch();
+  const deleteUser = async () => {
+    const res = await axios.delete(
+      `http://localhost:8080/api/user/${data?.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${user?.accessToken}`,
+        },
+      }
+    );
+    dispatch(allUsers(res.data));
+    toast.success("Xóa người dùng thành công!");
+    setModal(!modal);
+  };
+  const toggle = () => setModal(!modal);
+
+  const dataEdit = {
+    email: data?.email,
+    address: data?.address,
+    phone: data?.phone,
+  };
+  const [modalEdit, setModalEdit] = useState(false);
+  const toggleEdit = () => setModalEdit(!modalEdit);
+
+  const [modalBlock, setModalBlock] = useState(false);
+  const toggleBlock = () => setModalBlock(!modalBlock);
+  return (
+    <>
+      <tr>
+        <td>{data?.id}</td>
+        <td>{data?.username}</td>
+        <td>{data?.email}</td>
+        <td>{data?.address}</td>
+        <td>{data?.phone}</td>
+        <td>{data?.gender}</td>
+        <td>{data?.birth}</td>
+        <td>
+          <Button
+            color="danger"
+            onClick={toggle}
+            className="ri-delete-bin-line"
+          />
+          {modal && (
+            <ModalPopup
+              delete={deleteUser}
+              toggle={toggle}
+              modal={modal}
+              text="người dùng"
+            />
+          )}
+        </td>
+        <td>
+          <Button
+            color="warning"
+            onClick={() => setModalEdit(true)}
+            className="ri-edit-2-line"
+          />
+        </td>
+        <td>
+          <Button
+            color="info"
+            onClick={() => setModalBlock(true)}
+            className="ri-user-unfollow-line"
+          />
+        </td>
+      </tr>
+      <EditUserModal
+        toggle={toggleEdit}
+        modal={modalEdit}
+        setModal={setModalEdit}
+        data={dataEdit}
+        id={data?.id}
+      />
+      <BlockUserModal
+        toggle={toggleBlock}
+        modal={modalBlock}
+        setModal={setModalBlock}
+        text={data?.username}
+      />
+    </>
+  );
+};
+
 export default UserDashboard;
