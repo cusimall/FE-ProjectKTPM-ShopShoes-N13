@@ -1,0 +1,47 @@
+.btn-file-product {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .add-btn-product {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    padding: 12px;
+  }
+  
+  .search-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 300px;
+    background: white;
+  }
+  
+  .search-box input {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  .search-btn {
+    background: #f8f9fa;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .search-btn i {
+    font-size: 18px;
+    color: #333;
+  }
+  
