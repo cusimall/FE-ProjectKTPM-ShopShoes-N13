@@ -9,6 +9,8 @@ import storage from "redux-persist/lib/storage";
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import managerProductSlice from "./slices/managerProductSlice";
 import { persistReducer } from "redux-persist";
+import invoiceSlice from "./slices/invoiceSlice";
+import paymentSlice from "./slices/paymentSlice";
 
 const commonConfig = {
   storage,
@@ -34,6 +36,8 @@ const store = combineReducers({
   // addProduct: addProductSlice,
   user: UserSlice,
   managerProduct: managerProductSlice,
+  invoice: invoiceSlice,
+  payment: paymentSlice,
 });
 
 // const store = configureStore({
