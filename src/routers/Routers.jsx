@@ -24,7 +24,9 @@ const Routers = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="home" />} />
-      <Route path="home" element={<Home />} />
+      <Route path="home" element={<ProtectedRoute />}>
+        <Route path="" element={<Home />} />
+      </Route>
       <Route path="shop" element={<Shop />} />
       <Route path="contact" element={<Contact />} />
       <Route path="shop/:id" element={<ProductDetails />} />

@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 5px;
 }
+
 .add__product .form__group {
   display: flex;
   align-items: center;
