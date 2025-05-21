@@ -238,6 +238,27 @@ const ProductDetails = () => {
     },
     [quantity]
   );
+   const [replyingTo, setReplyingTo] = useState(null);
+  const replyText = useRef("");
+  const replyUser = useRef("");
+  const replyEmail = useRef("");
+
+  const handleReply = (index) => {
+    setReplyingTo(index);
+  };
+
+  const submitReply = (e, reviewIndex) => {
+    e.preventDefault();
+    const replyUserName = replyUser.current.value;
+    const replyUserMsg = replyText.current.value;
+    const replyUserEmail = replyEmail.current.value;
+
+    const replyObj = {
+      user: replyUserName,
+      text: replyUserMsg,
+      email: replyUserEmail,
+      timestamp: new Date().toLocaleString()
+    };
   return (
     <Helmet title={productName}>
       <img src={bannernho} alt="banner-nho" />
