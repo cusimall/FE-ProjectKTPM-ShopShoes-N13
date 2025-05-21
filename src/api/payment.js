@@ -48,3 +48,38 @@ export const createCodPayment = (orderId) =>
       reject(error.response ? error.response : error);
     }
   });
+
+
+/**
+ * Get all payment methods
+ */
+export const getPaymentMethods = () =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios({
+        url: "/api/v1/payments/methods",
+        method: "get",
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error.response ? error.response : error);
+    }
+  });
+
+// Process payment
+export const processPayment = (invoiceId, paymentDetails) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios({
+        url: "/api/v1/payments/process",
+        method: "post",
+        data: {
+          invoiceId,
+          ...paymentDetails,
+        },
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error.message);
+    }
+  });
