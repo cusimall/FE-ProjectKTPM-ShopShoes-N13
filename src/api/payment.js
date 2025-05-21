@@ -16,3 +16,18 @@ export const createVnPayPayment = (amount) =>
     }
   });
 
+/**
+ * Get payment status by ID
+ */
+export const getPaymentStatus = (paymentId) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios({
+        url: `/api/v1/payments/${paymentId}/status`,
+        method: "get",
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error.response ? error.response : error);
+    }
+  });
