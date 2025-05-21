@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {Button,Modal,ModalHeader,ModalBody,ModalFooter,Form,FormGroup,Input,Label,Col,} from "reactstrap";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
+import { editProduct } from "../../redux/slices/managerProductSlice";
 import { useEffect } from "react";
 import axios from "axios";
 import { editUser } from "../../redux/slices/UserSlice";
@@ -22,7 +23,7 @@ const EditUserModal = (props) => {
   const handleEditData = async () => {
     try {
       const res = await axios.put(
-        `http://localhost:8080/api/user/${id}`,
+        `http://localhost:8080/api/users/${id}`,
         dataEditUser,
         {
           headers: {

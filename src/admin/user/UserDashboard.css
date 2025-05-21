@@ -1,0 +1,43 @@
+.manager-section {
+  margin-top: 40px;
+  margin-left: 10%;
+}
+
+.manager {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.manager-user {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.manager-user i {
+  font-size: 32px;
+}
+
+.search-user {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.search-box {
+  width: 450px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+.search-box input {
+  width: 400px;
+  padding: 10px 5px;
+}
+.search-box i {
+  font-size: 25px;
+}

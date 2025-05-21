@@ -1,113 +1,112 @@
 /* Header */
 .admin__header {
-    width: 100%;
-    height: 70px;
-    background: #f8f9fa;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Wrapper */
-  .admin__nav-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
-  
-  /* Logo */
-  .admin__logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .admin__logo img {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .admin__logo a {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
-    text-decoration: none;
-  }
-  
-  /* Menu */
-  .admin__menu-list {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1.5rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .admin__menu-item a {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 500;
-    color: #333;
-    padding: 10px 15px;
-    text-decoration: none;
-    transition: 0.3s;
-  }
-  
-  /* ✅ Fix lỗi hover giữ màu */
-  .admin__menu-item a:hover:not(.active) {
-    background: rgba(0, 0, 0, 0.1);
-  }
-  
-  /* ✅ Fix lỗi "Thống kê" luôn được chọn */
-  .admin__menu-item a.active {
-    background: rgba(0, 0, 0, 0.2);
-    color: black !important;
-    font-weight: bold;
-    border-radius: 5px;
-  }
-  
-  /* User Section */
-  .admin__nav-right {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-  
-  .admin__nav-right span i {
-    color: #333;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  
-  /* Avatar */
-  .admin__user-avatar {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #333;
-  }
-  
-  /* Dropdown Menu */
-  .dropdown-menu {
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .dropdown-menu .dropdown-item {
-    color: #333;
-  }
-  
-  .dropdown-menu .dropdown-item:hover {
-    background: rgba(0, 0, 0, 0.1);
-  }
-  
+  width: 100%;
+  height: 70px;
+  background: #f8f9fa; /* Màu nền sáng */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Wrapper */
+.admin__nav-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Logo */
+.admin__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin__logo img {
+  width: 40px;
+  height: 40px;
+}
+
+.admin__logo a {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333; /* Chữ màu đen */
+  text-decoration: none;
+}
+
+/* Menu */
+.admin__menu-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin__menu-item a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #333; /* Chữ menu màu đen */
+  padding: 10px 15px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+/* ✅ Fix lỗi hover giữ màu */
+.admin__menu-item a:hover:not(.active) {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Fix lỗi "Thống kê" luôn được chọn */
+.admin__menu-item a.active {
+  background: rgba(0, 0, 0, 0.2); /* Màu nền đậm hơn */
+  color: black !important;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+/* User Section */
+.admin__nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.admin__nav-right span i {
+  color: #333; /* Màu icon đen */
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Avatar */
+.admin__user-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #333;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-menu .dropdown-item {
+  color: #333;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background: rgba(0, 0, 0, 0.1);
+}

@@ -1,5 +1,14 @@
 import React from "react";
-import {Chart as ChartJS,CategoryScale,PointElement,LineElement,Title,Tooltip,Legend} from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import { Line } from "react-chartjs-2";
 
 ChartJS.register(
@@ -41,6 +50,7 @@ export const data = {
     },
     {
       label: "Số lượng giày đã bán",
+      // data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
       data: exports.map((i) => i),
 
       borderColor: "rgb(53, 162, 235)",
