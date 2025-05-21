@@ -207,6 +207,17 @@ const ProductDetails = () => {
       toast.error("Gửi email thất bại!");
     }
   };
+  const handleLike = (index) => {
+    const updatedReviews = [...reviews];
+    if (!updatedReviews[index].isLiked) {
+      updatedReviews[index].likes += 1;
+      updatedReviews[index].isLiked = true;
+    } else {
+      updatedReviews[index].likes -= 1;
+      updatedReviews[index].isLiked = false;
+    }
+    setReviews(updatedReviews);
+  };
   return (
     <Helmet title={productName}>
       <img src={bannernho} alt="banner-nho" />
