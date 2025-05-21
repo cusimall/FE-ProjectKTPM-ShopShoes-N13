@@ -45,7 +45,18 @@ export const createCashOnDelivery = createAsyncThunk(
   }
 );
 
-
+// Get payment status
+export const fetchPaymentStatus = createAsyncThunk(
+  "payment/fetchPaymentStatus",
+  async (paymentId, thunkAPI) => {
+    try {
+      const response = await getPaymentStatus(paymentId);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || "Error fetching payment status");
+    }
+  }
+);
 
 const initialState = {
   paymentMethods: [],
