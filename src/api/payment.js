@@ -31,3 +31,20 @@ export const getPaymentStatus = (paymentId) =>
       reject(error.response ? error.response : error);
     }
   });
+
+/**
+ * Create a COD (Cash On Delivery) payment
+ */
+export const createCodPayment = (orderId) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios({
+        url: `/api/v1/payments/cod/create`,
+        method: "post",
+        data: { orderId },
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error.response ? error.response : error);
+    }
+  });
