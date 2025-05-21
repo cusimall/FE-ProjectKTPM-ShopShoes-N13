@@ -51,7 +51,22 @@ const Signup = () => {
       newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự";
     }
 
-    
+    // Phone validation
+    if (!phone) {
+      newErrors.phone = "Vui lòng nhập số điện thoại";
+    } else if (!/^[0-9]{10}$/.test(phone)) {
+      newErrors.phone = "Số điện thoại phải có 10 chữ số";
+    }
+
+    // Address validation
+    if (!address.trim()) {
+      newErrors.address = "Vui lòng nhập địa chỉ";
+    }
+
+    // Gender validation
+    if (!gender) {
+      newErrors.gender = "Vui lòng chọn giới tính";
+    }
 
     // Birth date validation
     if (!birth) {
