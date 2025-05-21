@@ -33,3 +33,21 @@ export const sendOrderConfirmation = (orderId, emailData) =>
       reject(error.response ? error.response : error);
     }
   });
+
+
+/**
+ * Send shipping notification email
+ */
+export const sendShippingNotification = (orderId, emailData) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios({
+        url: `/api/email/shipping-notification/${orderId}`,
+        method: "post",
+        data: emailData,
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error.response ? error.response : error);
+    }
+  });
