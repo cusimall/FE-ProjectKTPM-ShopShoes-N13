@@ -55,6 +55,97 @@ const ProductDetails = () => {
   const relatedProducts = allProducts?.filter(
     (data) => data.category === item?.category && data.id !== item?.id
   );
+const addToCart = () => {
+    if (sizeChoice === undefined) {
+      toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng!");
+      return;
+    }
+    dispatch(
+      cartActions.addItem({
+        id: item?.id,
+        productName: item.name || item?.productName,
+        price: item.retail_price_cents || item?.productPrice,
+        imgUrl: item?.grid_picture_url || item?.imgUrl,
+        quantity: quantity,
+        size: sizeChoice,
+      })
+    );
+    toast.success("Thêm sản phẩm vào giỏ hàng thành công!");
+    navigate("/cart");
+  };
+
+  const navigate = useNavigate();
+  const buyNow = () => {
+    dispatch(
+      cartActions.addItem({
+        id: item?.id,
+        productName: item.name || item?.productName,
+        price: item.retail_price_cents || item?.productPrice,
+        imgUrl: item?.grid_picture_url || item?.imgUrl,
+        quantity: quantity,
+        size: sizeChoice !== undefined ? sizeChoice : 40,
+      })
+    );
+    navigate("/checkout");
+  };
+
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from "reactstrap";
+import Helmet from "../components/Helmet/Helmet";
+import "../styles/product-details.css";
+import { motion } from "framer-motion";
+import { FaFacebook, FaInstagram } from "react-icons/fa";
+import { FiMessageCircle } from "react-icons/fi";
+import ProductsList from "../components/UI/ProductsList";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { cartActions } from "../redux/slices/cartSlice";
+import size from "../assets/data/sizeArr";
+import axios from "axios";
+import SizeModal from "../components/UI/SizeModal";
+import SelectQuantity from "../components/UI/SelectQuantity";
+import bannernho from "../assets/images/banner-nho.png";
+import { sendEmail } from "../api/email";
+
+const ProductDetails = () => {
+  const dispatch = useDispatch();
+
+  //
+  const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
+  //
+  const [tab, setTab] = useState("desc");
+  const [rating, setRating] = useState(null);
+  const reviewUser = useRef("");
+  const reviewMsg = useRef("");
+  const reviewEmail = useRef("");
+  const { id } = useParams();
+  const [reviews, setReviews] = useState([
+    { 
+      rating: 4.6, 
+      text: "sản phẩm đẹp", 
+      user: "Khánh", 
+      email: "khanh@example.com", 
+      likes: 0, 
+      isLiked: false,
+      replies: []
+    },
+  ]);
+  const [item, setItem] = useState({});
+  const allProducts = useSelector((state) => state.managerProduct?.products);
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const res = await axios.get(`http://localhost:8080/api/products/${id}`);
+      setItem(res.data.data);
+    };
+    fetchProduct();
+  }, [id]);
+
+  const { imgUrl, productName, productPrice, category } = item;
+  const relatedProducts = allProducts?.filter(
+    (data) => data.category === item?.category && data.id !== item?.id
+  );
   const addToCart = () => {
     if (sizeChoice === undefined) {
       toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng!");
@@ -116,7 +207,6 @@ const ProductDetails = () => {
       toast.error("Gửi email thất bại!");
     }
   };
-
   const handleLike = (index) => {
     const updatedReviews = [...reviews];
     if (!updatedReviews[index].isLiked) {
@@ -128,7 +218,7 @@ const ProductDetails = () => {
     }
     setReviews(updatedReviews);
   };
-
+  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [item]);
@@ -148,17 +238,7 @@ const ProductDetails = () => {
     },
     [quantity]
   );
-
-  const handleChangeQuantity = useCallback(
-    (flag) => {
-      if (flag === "minus" && quantity === 1) return;
-      if (flag === "minus") setQuantity((prev) => +prev - 1);
-      if (flag === "plus") setQuantity((prev) => +prev + 1);
-    },
-    [quantity]
-  );
-
-  const [replyingTo, setReplyingTo] = useState(null);
+   const [replyingTo, setReplyingTo] = useState(null);
   const replyText = useRef("");
   const replyUser = useRef("");
   const replyEmail = useRef("");
@@ -179,7 +259,6 @@ const ProductDetails = () => {
       email: replyUserEmail,
       timestamp: new Date().toLocaleString()
     };
-
     const updatedReviews = [...reviews];
     updatedReviews[reviewIndex].replies.push(replyObj);
     setReviews(updatedReviews);
@@ -192,7 +271,6 @@ const ProductDetails = () => {
     
     toast.success("Phản hồi đã được gửi");
   };
-
   return (
     <Helmet title={productName}>
       <img src={bannernho} alt="banner-nho" />
@@ -356,8 +434,7 @@ const ProductDetails = () => {
           </Row>
         </Container>
       </section>
-
-      <section>
+<section>
         <Container>
           <Row>
             <Col lg="12">
