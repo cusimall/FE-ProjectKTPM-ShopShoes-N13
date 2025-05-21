@@ -15,6 +15,7 @@ import axios from "axios";
 import SizeModal from "../components/UI/SizeModal";
 import SelectQuantity from "../components/UI/SelectQuantity";
 import bannernho from "../assets/images/banner-nho.png";
+import { sendEmail } from "../api/email";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
@@ -27,15 +28,24 @@ const ProductDetails = () => {
   const [rating, setRating] = useState(null);
   const reviewUser = useRef("");
   const reviewMsg = useRef("");
+  const reviewEmail = useRef("");
   const { id } = useParams();
   const [reviews, setReviews] = useState([
-    { rating: 4.6, text: "sản phẩm đẹp", user: "Khánh" },
+    { 
+      rating: 4.6, 
+      text: "sản phẩm đẹp", 
+      user: "Khánh", 
+      email: "khanh@example.com", 
+      likes: 0, 
+      isLiked: false,
+      replies: []
+    },
   ]);
   const [item, setItem] = useState({});
   const allProducts = useSelector((state) => state.managerProduct?.products);
   useEffect(() => {
     const fetchProduct = async () => {
-      const res = await axios.get(`http://localhost:8080/api/product/${id}`);
+      const res = await axios.get(`http://localhost:8080/api/products/${id}`);
       setItem(res.data.data);
     };
     fetchProduct();
