@@ -145,47 +145,7 @@ const Shop = () => {
         </Container>
       </section>
 
-      <section className="pt-0">
-        <Container>
-          <Row>
-            {!productsData || productsData.length === 0 ? (
-              <h1 className="text-center fs-4">
-                Không tìm thấy sản phẩm! Có lỗi đã xảy ra vui lòng tải lại trang
-              </h1>
-            ) : check === 1 ? (
-              <>
-                <ProductsList data={productsData} />
-                {totalPages > 1 && (
-                  <div className="paginate-shop">
-                    <ReactPaginate
-                      previousLabel="<"
-                      nextLabel=">"
-                      pageClassName="page-item"
-                      pageLinkClassName="page-link"
-                      previousClassName="page-item"
-                      previousLinkClassName="page-link"
-                      nextClassName="page-item"
-                      nextLinkClassName="page-link"
-                      breakLabel="..."
-                      breakClassName="page-item"
-                      breakLinkClassName="page-link"
-                      pageCount={Math.max(1, totalPages)}
-                      pageRangeDisplayed={5}
-                      onPageChange={handlePageChange}
-                      containerClassName="pagination"
-                      activeClassName="active"
-                    />
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <ProductsList data={productsSort} />
-              </>
-            )}
-          </Row>
-        </Container>
-      </section>
+      
     </Helmet>
   );
 };
