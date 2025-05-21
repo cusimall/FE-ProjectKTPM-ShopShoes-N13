@@ -218,6 +218,26 @@ const ProductDetails = () => {
     }
     setReviews(updatedReviews);
   };
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [item]);
+  const [selectIdx, setSelectIdx] = useState(-1);
+  const [sizeChoice, setSizeChoice] = useState();
+
+  // handle quantity
+  const [quantity, setQuantity] = useState(1);
+
+  const handleQuantity = useCallback(
+    (number) => {
+      if (!Number(number) || Number(number) < 1) {
+        return;
+      } else {
+        setQuantity(number);
+      }
+    },
+    [quantity]
+  );
   return (
     <Helmet title={productName}>
       <img src={bannernho} alt="banner-nho" />
