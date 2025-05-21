@@ -89,48 +89,124 @@ const addToCart = () => {
     navigate("/checkout");
   };
 
-  const submitHandler = (e) => {
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from "reactstrap";
+import Helmet from "../components/Helmet/Helmet";
+import "../styles/product-details.css";
+import { motion } from "framer-motion";
+import { FaFacebook, FaInstagram } from "react-icons/fa";
+import { FiMessageCircle } from "react-icons/fi";
+import ProductsList from "../components/UI/ProductsList";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { cartActions } from "../redux/slices/cartSlice";
+import size from "../assets/data/sizeArr";
+import axios from "axios";
+import SizeModal from "../components/UI/SizeModal";
+import SelectQuantity from "../components/UI/SelectQuantity";
+import bannernho from "../assets/images/banner-nho.png";
+import { sendEmail } from "../api/email";
+
+const ProductDetails = () => {
+  const dispatch = useDispatch();
+
+  //
+  const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
+  //
+  const [tab, setTab] = useState("desc");
+  const [rating, setRating] = useState(null);
+  const reviewUser = useRef("");
+  const reviewMsg = useRef("");
+  const reviewEmail = useRef("");
+  const { id } = useParams();
+  const [reviews, setReviews] = useState([
+    { 
+      rating: 4.6, 
+      text: "sản phẩm đẹp", 
+      user: "Khánh", 
+      email: "khanh@example.com", 
+      likes: 0, 
+      isLiked: false,
+      replies: []
+    },
+  ]);
+  const [item, setItem] = useState({});
+  const allProducts = useSelector((state) => state.managerProduct?.products);
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const res = await axios.get(`http://localhost:8080/api/products/${id}`);
+      setItem(res.data.data);
+    };
+    fetchProduct();
+  }, [id]);
+
+  const { imgUrl, productName, productPrice, category } = item;
+  const relatedProducts = allProducts?.filter(
+    (data) => data.category === item?.category && data.id !== item?.id
+  );
+  const addToCart = () => {
+    if (sizeChoice === undefined) {
+      toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng!");
+      return;
+    }
+    dispatch(
+      cartActions.addItem({
+        id: item?.id,
+        productName: item.name || item?.productName,
+        price: item.retail_price_cents || item?.productPrice,
+        imgUrl: item?.grid_picture_url || item?.imgUrl,
+        quantity: quantity,
+        size: sizeChoice,
+      })
+    );
+    toast.success("Thêm sản phẩm vào giỏ hàng thành công!");
+    navigate("/cart");
+  };
+
+  const navigate = useNavigate();
+  const buyNow = () => {
+    dispatch(
+      cartActions.addItem({
+        id: item?.id,
+        productName: item.name || item?.productName,
+        price: item.retail_price_cents || item?.productPrice,
+        imgUrl: item?.grid_picture_url || item?.imgUrl,
+        quantity: quantity,
+        size: sizeChoice !== undefined ? sizeChoice : 40,
+      })
+    );
+    navigate("/checkout");
+  };
+
+  const submitHandler = async (e) => {
     e.preventDefault();
     const reviewUserName = reviewUser.current.value;
     const reviewUserMsg = reviewMsg.current.value;
+    const reviewUserEmail = reviewEmail.current.value;
     const reviewObj = {
       user: reviewUserName,
       text: reviewUserMsg,
       rating,
+      email: reviewUserEmail,
+      likes: 0,
+      isLiked: false
     };
     setReviews([...reviews, reviewObj]);
     toast.success("Đánh giá đã được gửi");
+  
+    // Gửi email
+    try {
+      await sendEmail({
+        to: "admin@example.com", // Địa chỉ email nhận đánh giá
+        subject: `Đánh giá sản phẩm từ ${reviewUserName}`,
+        message: `Số sao: ${rating}\nNội dung: ${reviewUserMsg}\nEmail: ${reviewUserEmail}`,
+      });
+    } catch (error) {
+      toast.error("Gửi email thất bại!");
+    }
   };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [item]);
-  const [selectIdx, setSelectIdx] = useState(-1);
-  const [sizeChoice, setSizeChoice] = useState();
-
-  // handle quantity
-  const [quantity, setQuantity] = useState(1);
-
-  const handleQuantity = useCallback(
-    (number) => {
-      if (!Number(number) || Number(number) < 1) {
-        return;
-      } else {
-        setQuantity(number);
-      }
-    },
-    [quantity]
-  );
-
-  const handleChangeQuantity = useCallback(
-    (flag) => {
-      if (flag === "minus" && quantity === 1) return;
-      if (flag === "minus") setQuantity((prev) => +prev - 1);
-      if (flag === "plus") setQuantity((prev) => +prev + 1);
-    },
-    [quantity]
-  );
-
   return (
     <Helmet title={productName}>
       <img src={bannernho} alt="banner-nho" />
