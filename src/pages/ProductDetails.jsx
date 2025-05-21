@@ -259,6 +259,18 @@ const ProductDetails = () => {
       email: replyUserEmail,
       timestamp: new Date().toLocaleString()
     };
+    const updatedReviews = [...reviews];
+    updatedReviews[reviewIndex].replies.push(replyObj);
+    setReviews(updatedReviews);
+    setReplyingTo(null);
+    
+    // Clear form
+    replyUser.current.value = "";
+    replyText.current.value = "";
+    replyEmail.current.value = "";
+    
+    toast.success("Phản hồi đã được gửi");
+  };
   return (
     <Helmet title={productName}>
       <img src={bannernho} alt="banner-nho" />
