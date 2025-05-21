@@ -34,7 +34,6 @@ export const sendOrderConfirmation = (orderId, emailData) =>
     }
   });
 
-
 /**
  * Send shipping notification email
  */

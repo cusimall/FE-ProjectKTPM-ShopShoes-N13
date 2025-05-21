@@ -49,7 +49,6 @@ export const createCodPayment = (orderId) =>
     }
   });
 
-
 /**
  * Get all payment methods
  */
