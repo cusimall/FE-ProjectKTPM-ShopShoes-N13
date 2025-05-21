@@ -55,7 +55,11 @@ const ProductDetails = () => {
   const relatedProducts = allProducts?.filter(
     (data) => data.category === item?.category && data.id !== item?.id
   );
-  const addToCart = () => {
+const addToCart = () => {
+    if (sizeChoice === undefined) {
+      toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng!");
+      return;
+    }
     dispatch(
       cartActions.addItem({
         id: item?.id,
@@ -63,10 +67,11 @@ const ProductDetails = () => {
         price: item.retail_price_cents || item?.productPrice,
         imgUrl: item?.grid_picture_url || item?.imgUrl,
         quantity: quantity,
-        size: sizeChoice !== undefined ? sizeChoice : 40,
+        size: sizeChoice,
       })
     );
-    toast.success("Thêm sản phầm vào giỏ hàng thành công!");
+    toast.success("Thêm sản phẩm vào giỏ hàng thành công!");
+    navigate("/cart");
   };
 
   const navigate = useNavigate();
