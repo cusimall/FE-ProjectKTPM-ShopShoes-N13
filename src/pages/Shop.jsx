@@ -49,10 +49,24 @@ const Shop = () => {
   };
 
   const fetchSort = async () => {
-    const res = await axios.get(
-      `http://localhost:8080/api/product/sort-products?asc=${asc}&sortBy=${sort}`
-    );
-    setProductsSort(res.data.data);
+    try {
+      console.log('Fetching sorted products:', { sort, asc });
+      const res = await axios.get(
+        `/api/products/sort-products?page=0&sortBy=${sort}&asc=${asc}`
+      );
+      console.log('Sorted products response:', res);
+      if (res.data) {
+        const { data, total_pages } = res.data;
+        setProductsSort(data || []);
+        setTotalPages(total_pages || 1);
+      } else {
+        console.warn('Invalid response format:', res.data);
+        setProductsSort([]);
+      }
+    } catch (error) {
+      console.error('Error fetching sorted products:', error);
+      setProductsSort([]);
+    }
   };
 
   const handleSearch = (e) => {
@@ -134,33 +148,35 @@ const Shop = () => {
       <section className="pt-0">
         <Container>
           <Row>
-            {productsData?.length === 0 ? (
+            {!productsData || productsData.length === 0 ? (
               <h1 className="text-center fs-4">
                 Không tìm thấy sản phẩm! Có lỗi đã xảy ra vui lòng tải lại trang
               </h1>
             ) : check === 1 ? (
               <>
                 <ProductsList data={productsData} />
-                <div className="paginate-shop">
-                  <ReactPaginate
-                    previousLabel="<"
-                    nextLabel=">"
-                    pageClassName="page-item"
-                    pageLinkClassName="page-link"
-                    previousClassName="page-item"
-                    previousLinkClassName="page-link"
-                    nextClassName="page-item"
-                    nextLinkClassName="page-link"
-                    breakLabel="..."
-                    breakClassName="page-item"
-                    breakLinkClassName="page-link"
-                    pageCount={totalPages}
-                    pageRangeDisplayed={5}
-                    onPageChange={handlePageChange}
-                    containerClassName="pagination"
-                    activeClassName="active"
-                  />
-                </div>
+                {totalPages > 1 && (
+                  <div className="paginate-shop">
+                    <ReactPaginate
+                      previousLabel="<"
+                      nextLabel=">"
+                      pageClassName="page-item"
+                      pageLinkClassName="page-link"
+                      previousClassName="page-item"
+                      previousLinkClassName="page-link"
+                      nextClassName="page-item"
+                      nextLinkClassName="page-link"
+                      breakLabel="..."
+                      breakClassName="page-item"
+                      breakLinkClassName="page-link"
+                      pageCount={Math.max(1, totalPages)}
+                      pageRangeDisplayed={5}
+                      onPageChange={handlePageChange}
+                      containerClassName="pagination"
+                      activeClassName="active"
+                    />
+                  </div>
+                )}
               </>
             ) : (
               <>
