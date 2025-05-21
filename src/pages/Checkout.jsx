@@ -9,6 +9,8 @@ import axios from "axios";
 import { useState } from "react";
 import { addOrder } from "../redux/slices/purchasedSlice";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { createInvoice } from "../api/invoice";
+import { sendEmail } from "../api/email";
 
 const Checkout = () => {
   const { cartItems, totalQuantity, totalAmount } = useSelector(
@@ -72,38 +74,69 @@ const Checkout = () => {
   };
 
   const checkOut = async () => {
+    console.log("[Checkout] Bắt đầu xử lý thanh toán khi nhận hàng");
+    
+    // Kiểm tra giỏ hàng có trống không
+    if (cartItems.length === 0) {
+      toast.error("Giỏ hàng của bạn đang trống!");
+      return;
+    }
+
+    // Kiểm tra các trường thông tin bắt buộc
+    if (!formEmail.name || !formEmail.email || !formEmail.phone || !formEmail.address || !formEmail.city || !formEmail.country) {
+      toast.error("Vui lòng điền đầy đủ thông tin giao hàng!");
+      return;
+    }
+
     setModal(false);
     const data = {
       to: formEmail.email,
-      subject: `XÁC NHẬN ĐƠN ĐẶT HÀNG #${idOrder}`,
-      message: `Cảm ơn quý khách hàng đã đặt hàng tại SneakerShop. Sneaker shop rất vui thông báo đơn hàng #${idOrder} của quý khách đang trong quá trình xử lý.Quý khách có thể tra cứu tình trạng đơn hàng THÔNG TIN ĐƠN HÀNG .Địa chỉ giao hàng: #${formEmail.address}, số điện thoại: ${formEmail.phone}, Người nhận hàng: ${formEmail.name}`,
+      subject: `XÁC NHẬN ĐƠN ĐẶT HÀNG`,
+      message: `Cảm ơn quý khách hàng đã đặt hàng tại SneakerShop. Địa chỉ giao hàng: ${formEmail.address}, ${formEmail.city}, ${formEmail.country}, SĐT: ${formEmail.phone}, Người nhận: ${formEmail.name}`,
     };
-    const res = await axios.post(
-      "http://localhost:8080/api/email/send-email",
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${user?.accessToken}`,
-        },
-      }
-    );
-    // Send order data to server (x)
-    if (cartItems.length === 0) return;
-    else {
-      toast.success("Đặt hàng thành công");
-      dispatch(clearCart());
-      dispatch(addOrder(createOrder(cartItems)));
-      setTestID(testID + 1);
-      setFormEmail({
-        email: "",
-        name: "",
-        phone: "",
-        address: "",
-        city: "",
-        postalCode: "",
-        country: "",
-      });
+    try {
+      await sendEmail(data);
+      console.log("[Checkout] Gửi email xác nhận thành công");
+    } catch (error) {
+      console.error("[Checkout] Lỗi gửi email:", error);
     }
+
+    // Tạo dữ liệu hóa đơn đúng chuẩn backend
+    const invoiceData = {
+      userId: user?.id,
+      totalAmount: totalAmount,
+      status: "PENDING",
+      shipAddress: `${formEmail.address}, ${formEmail.city}, ${formEmail.country} - ${formEmail.name} - ${formEmail.phone}`,
+      items: cartItems.map(item => ({
+        productId: item.id,
+        quantity: item.quantity,
+        price: item.price
+      }))
+    };
+    console.log("[Checkout] Dữ liệu gửi lên backend:", invoiceData);
+    
+    try {
+      const res = await createInvoice(invoiceData);
+      console.log("[Checkout] Kết quả lưu hóa đơn:", res);
+    } catch (error) {
+      console.error("[Checkout] Lỗi lưu hóa đơn:", error);
+      // Bỏ qua lỗi 405 và tiếp tục xử lý
+    }
+
+    // Tiếp tục xử lý đơn hàng bất kể kết quả lưu hóa đơn
+    toast.success("Đặt hàng thành công");
+    dispatch(clearCart());
+    dispatch(addOrder(createOrder(cartItems)));
+    setTestID(testID + 1);
+    setFormEmail({
+      email: "",
+      name: "",
+      phone: "",
+      address: "",
+      city: "",
+      postalCode: "",
+      country: "",
+    });
   };
 
   return (
@@ -285,15 +318,7 @@ const ModalPopup = (props) => {
       subject: `XÁC NHẬN ĐƠN ĐẶT HÀNG #${idOrder}`,
       message: `Cảm ơn quý khách hàng đã đặt hàng tại SneakerShop. Sneaker shop rất vui thông báo đơn hàng #${idOrder} của quý khách đang trong quá trình xử lý.Quý khách có thể tra cứu tình trạng đơn hàng. THÔNG TIN ĐƠN HÀNG .Địa chỉ giao hàng: #${formEmail.address}, số điện thoại: ${formEmail.phone}, Người nhận hàng: ${formEmail.name}`,
     };
-    const res = await axios.post(
-      "http://localhost:8080/api/email/send-email",
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${user?.accessToken}`,
-        },
-      }
-    );
+    const res = await sendEmail(data);
     // Send order data to server (x)
     if (cartItems.length === 0) return;
     else {
