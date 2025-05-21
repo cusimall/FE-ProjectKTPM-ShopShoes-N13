@@ -3,6 +3,7 @@ import { Container, Col, Row } from "reactstrap";
 import { FaHome } from "react-icons/fa";
 import "./contact.css";
 import { TypeAnimation } from "react-type-animation";
+
 import { sendEmail } from "../../api/email";
 import { toast } from "react-toastify";
 
@@ -81,6 +82,7 @@ const Contact = () => {
 
   return (
     <section className="contact">
+
       <Container>
         <Row>
           <Col lg="6">
@@ -163,6 +165,7 @@ const Contact = () => {
           <Col lg="6">
             <div className="contact-form">
               <div className="contact__form">
+
                 <form onSubmit={handleSubmit}>
                   <div>
                     <input
