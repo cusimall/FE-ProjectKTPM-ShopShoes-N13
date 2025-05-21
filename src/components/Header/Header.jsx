@@ -16,6 +16,9 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logOut } from "../../redux/slices/authSlice";
 
+import { clearCart } from "../../redux/slices/cartSlice";
+
+
 const nav__links = [
   {
     path: "home",
@@ -82,13 +85,21 @@ const Header = () => {
 
   const handleLogout = () => {
     dispatch(logOut());
+
+    dispatch(clearCart());
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     toast.success("Đăng xuất thành công!");
+    navigate("/login");
   };
+
+
   const handleProfile = () => {
     setTimeout(() => {
       navigate("/user-menu/profile");
     }, 1000);
   };
+
   const handlePurchased = () => {
     setTimeout(() => {
       navigate("/user-menu/purchased");
@@ -161,9 +172,13 @@ const Header = () => {
                     <DropdownItem onClick={handlePurchased}>
                       Lịch sử mua hàng
                     </DropdownItem>
-                    <DropdownItem onClick={handleVerify}>
-                      Trang quản lý
-                    </DropdownItem>
+
+                    {currentUser?.roles?.includes('ROLE_ADMIN') && (
+                      <DropdownItem onClick={handleVerify}>
+                        Trang quản lý
+                      </DropdownItem>
+                    )}
+
                     <DropdownItem onClick={handleLogout}>
                       Đăng xuất
                     </DropdownItem>
