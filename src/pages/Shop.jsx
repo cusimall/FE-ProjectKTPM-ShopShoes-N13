@@ -145,9 +145,7 @@ const Shop = () => {
         </Container>
       </section>
 
-
-
-                  <section className="pt-0">
+      <section className="pt-0">
         <Container>
           <Row>
             {!productsData || productsData.length === 0 ? (
@@ -188,7 +186,6 @@ const Shop = () => {
           </Row>
         </Container>
       </section>
-      
     </Helmet>
   );
 };
