@@ -51,3 +51,20 @@ export const sendShippingNotification = (orderId, emailData) =>
       reject(error.response ? error.response : error);
     }
   });
+
+/**
+ * Send password reset email
+ */
+export const sendPasswordReset = (emailData) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios({
+        url: "/api/email/password-reset",
+        method: "post",
+        data: emailData,
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error.response ? error.response : error);
+    }
+  }); 
