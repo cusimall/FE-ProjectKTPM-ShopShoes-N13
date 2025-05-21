@@ -55,97 +55,6 @@ const ProductDetails = () => {
   const relatedProducts = allProducts?.filter(
     (data) => data.category === item?.category && data.id !== item?.id
   );
-const addToCart = () => {
-    if (sizeChoice === undefined) {
-      toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng!");
-      return;
-    }
-    dispatch(
-      cartActions.addItem({
-        id: item?.id,
-        productName: item.name || item?.productName,
-        price: item.retail_price_cents || item?.productPrice,
-        imgUrl: item?.grid_picture_url || item?.imgUrl,
-        quantity: quantity,
-        size: sizeChoice,
-      })
-    );
-    toast.success("Thêm sản phẩm vào giỏ hàng thành công!");
-    navigate("/cart");
-  };
-
-  const navigate = useNavigate();
-  const buyNow = () => {
-    dispatch(
-      cartActions.addItem({
-        id: item?.id,
-        productName: item.name || item?.productName,
-        price: item.retail_price_cents || item?.productPrice,
-        imgUrl: item?.grid_picture_url || item?.imgUrl,
-        quantity: quantity,
-        size: sizeChoice !== undefined ? sizeChoice : 40,
-      })
-    );
-    navigate("/checkout");
-  };
-
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from "reactstrap";
-import Helmet from "../components/Helmet/Helmet";
-import "../styles/product-details.css";
-import { motion } from "framer-motion";
-import { FaFacebook, FaInstagram } from "react-icons/fa";
-import { FiMessageCircle } from "react-icons/fi";
-import ProductsList from "../components/UI/ProductsList";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { cartActions } from "../redux/slices/cartSlice";
-import size from "../assets/data/sizeArr";
-import axios from "axios";
-import SizeModal from "../components/UI/SizeModal";
-import SelectQuantity from "../components/UI/SelectQuantity";
-import bannernho from "../assets/images/banner-nho.png";
-import { sendEmail } from "../api/email";
-
-const ProductDetails = () => {
-  const dispatch = useDispatch();
-
-  //
-  const [modal, setModal] = useState(false);
-  const toggle = () => setModal(!modal);
-  //
-  const [tab, setTab] = useState("desc");
-  const [rating, setRating] = useState(null);
-  const reviewUser = useRef("");
-  const reviewMsg = useRef("");
-  const reviewEmail = useRef("");
-  const { id } = useParams();
-  const [reviews, setReviews] = useState([
-    { 
-      rating: 4.6, 
-      text: "sản phẩm đẹp", 
-      user: "Khánh", 
-      email: "khanh@example.com", 
-      likes: 0, 
-      isLiked: false,
-      replies: []
-    },
-  ]);
-  const [item, setItem] = useState({});
-  const allProducts = useSelector((state) => state.managerProduct?.products);
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const res = await axios.get(`http://localhost:8080/api/products/${id}`);
-      setItem(res.data.data);
-    };
-    fetchProduct();
-  }, [id]);
-
-  const { imgUrl, productName, productPrice, category } = item;
-  const relatedProducts = allProducts?.filter(
-    (data) => data.category === item?.category && data.id !== item?.id
-  );
   const addToCart = () => {
     if (sizeChoice === undefined) {
       toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng!");
@@ -207,6 +116,7 @@ const ProductDetails = () => {
       toast.error("Gửi email thất bại!");
     }
   };
+
   const handleLike = (index) => {
     const updatedReviews = [...reviews];
     if (!updatedReviews[index].isLiked) {
@@ -218,7 +128,7 @@ const ProductDetails = () => {
     }
     setReviews(updatedReviews);
   };
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [item]);
@@ -238,7 +148,17 @@ const ProductDetails = () => {
     },
     [quantity]
   );
-   const [replyingTo, setReplyingTo] = useState(null);
+
+  const handleChangeQuantity = useCallback(
+    (flag) => {
+      if (flag === "minus" && quantity === 1) return;
+      if (flag === "minus") setQuantity((prev) => +prev - 1);
+      if (flag === "plus") setQuantity((prev) => +prev + 1);
+    },
+    [quantity]
+  );
+
+  const [replyingTo, setReplyingTo] = useState(null);
   const replyText = useRef("");
   const replyUser = useRef("");
   const replyEmail = useRef("");
@@ -259,6 +179,7 @@ const ProductDetails = () => {
       email: replyUserEmail,
       timestamp: new Date().toLocaleString()
     };
+
     const updatedReviews = [...reviews];
     updatedReviews[reviewIndex].replies.push(replyObj);
     setReviews(updatedReviews);
@@ -271,6 +192,7 @@ const ProductDetails = () => {
     
     toast.success("Phản hồi đã được gửi");
   };
+
   return (
     <Helmet title={productName}>
       <img src={bannernho} alt="banner-nho" />
@@ -472,17 +394,97 @@ const ProductDetails = () => {
                           <div className="rv-content">
                             <p>{item.user}</p>
                             <span>Đánh giá {item.rating}</span>
-
                             <p>{item.text}</p>
+                            <p>Email: {item.email}</p>
 
                             <div className="rv-react">
-                              <motion.p whileHover={{ scale: 1.1 }}>
-                                Thích
+                              <motion.p 
+                                whileHover={{ scale: 1.1 }} 
+                                onClick={() => handleLike(idx)}
+                                style={{ 
+                                  color: item.isLiked ? '#007bff' : 'inherit',
+                                  cursor: 'pointer'
+                                }}
+                              >
+                                Thích ({item.likes})
                               </motion.p>
-                              <motion.p whileHover={{ scale: 1.1 }}>
+                              <motion.p 
+                                whileHover={{ scale: 1.1 }}
+                                onClick={() => handleReply(idx)}
+                                style={{ cursor: 'pointer' }}
+                              >
                                 Trả lời
                               </motion.p>
                             </div>
+
+                            {/* Display Replies */}
+                            {item.replies && item.replies.length > 0 && (
+                              <div className="replies-section" style={{ marginLeft: '20px', marginTop: '10px' }}>
+                                {item.replies.map((reply, replyIdx) => (
+                                  <div key={replyIdx} className="reply-item" style={{ 
+                                    borderLeft: '2px solid #007bff',
+                                    paddingLeft: '10px',
+                                    marginTop: '10px'
+                                  }}>
+                                    <p style={{ fontWeight: 'bold' }}>{reply.user}</p>
+                                    <p>{reply.text}</p>
+                                    <p style={{ fontSize: '0.8em', color: '#666' }}>{reply.timestamp}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Reply Form */}
+                            {replyingTo === idx && (
+                              <div className="reply-form" style={{ marginTop: '10px', marginLeft: '20px' }}>
+                                <form onSubmit={(e) => submitReply(e, idx)}>
+                                  <div className="form__group">
+                                    <input
+                                      type="text"
+                                      placeholder="Nhập tên của bạn"
+                                      ref={replyUser}
+                                      required
+                                    />
+                                  </div>
+                                  <div className="form__group">
+                                    <input
+                                      type="email"
+                                      placeholder="Nhập email của bạn"
+                                      ref={replyEmail}
+                                      required
+                                    />
+                                  </div>
+                                  <div className="form__group">
+                                    <textarea
+                                      rows={2}
+                                      type="text"
+                                      placeholder="Nhập phản hồi của bạn..."
+                                      ref={replyText}
+                                      required
+                                    />
+                                  </div>
+                                  <div className="d-flex gap-2">
+                                    <motion.button
+                                      whileTap={{ scale: 1.2 }}
+                                      type="submit"
+                                      className="buy__btn"
+                                      style={{ padding: '5px 15px' }}
+                                    >
+                                      Gửi phản hồi
+                                    </motion.button>
+                                    <motion.button
+                                      whileTap={{ scale: 1.2 }}
+                                      type="button"
+                                      className="buy__btn"
+                                      style={{ padding: '5px 15px', backgroundColor: '#dc3545' }}
+                                      onClick={() => setReplyingTo(null)}
+                                    >
+                                      Hủy
+                                    </motion.button>
+                                  </div>
+                                </form>
+                              </div>
+                            )}
                           </div>
                         </li>
                       ))}
@@ -500,36 +502,33 @@ const ProductDetails = () => {
                         </div>
 
                         <div className="form__group d-flex align-items-center gap-5 rating__group">
-                          <motion.span
-                            whileTap={{ scale: 1.2 }}
-                            onClick={() => setRating(1)}
-                          >
-                            1<i className="ri-star-s-fill"></i>
-                          </motion.span>
-                          <motion.span
-                            whileTap={{ scale: 1.2 }}
-                            onClick={() => setRating(2)}
-                          >
-                            2<i className="ri-star-s-fill"></i>
-                          </motion.span>
-                          <motion.span
-                            whileTap={{ scale: 1.2 }}
-                            onClick={() => setRating(3)}
-                          >
-                            3<i className="ri-star-s-fill"></i>
-                          </motion.span>
-                          <motion.span
-                            whileTap={{ scale: 1.2 }}
-                            onClick={() => setRating(4)}
-                          >
-                            4<i className="ri-star-s-fill"></i>
-                          </motion.span>
-                          <motion.span
-                            whileTap={{ scale: 1.2 }}
-                            onClick={() => setRating(5)}
-                          >
-                            5<i className="ri-star-s-fill"></i>
-                          </motion.span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <motion.span
+                              key={star}
+                              whileTap={{ scale: 1.2 }}
+                              onClick={() => setRating(star)}
+                              style={{
+                                cursor: 'pointer',
+                                color: rating >= star ? '#ffc107' : '#e4e5e9',
+                                fontSize: '1.5rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '2px',
+                                padding: '5px',
+                                borderRadius: '5px',
+                                transition: 'all 0.2s ease',
+                                backgroundColor: rating === star ? 'rgba(255, 193, 7, 0.1)' : 'transparent'
+                              }}
+                            >
+                              {star}
+                              <i 
+                                className="ri-star-s-fill"
+                                style={{
+                                  fontSize: '1.2rem'
+                                }}
+                              />
+                            </motion.span>
+                          ))}
                         </div>
                         <div className="form__group">
                           <textarea
@@ -537,6 +536,14 @@ const ProductDetails = () => {
                             type="text"
                             placeholder="Để lại lời nhắn..."
                             ref={reviewMsg}
+                            required
+                          />
+                        </div>
+                        <div className="form__group">
+                          <input
+                            type="email"
+                            placeholder="Nhập email của bạn"
+                            ref={reviewEmail}
                             required
                           />
                         </div>
