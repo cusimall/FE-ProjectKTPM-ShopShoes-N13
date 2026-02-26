@@ -1,0 +1,45 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  NODE_VERSION: "18"
+
+cache:
+  paths:
+    - node_modules/
+
+# Build job
+build:
+  stage: build
+  image: node:${NODE_VERSION}
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week
+
+# Test job (nếu chưa có test script, chỉ echo cho pass)
+test:
+  stage: test
+  image: node:${NODE_VERSION}
+  script:
+    - npm install
+    - echo "No test script"
+  dependencies:
+    - build
+
+# Deploy job
+deploy:
+  stage: deploy
+  image: node:${NODE_VERSION}
+  script:
+    - echo "Deploying to production..."
+    # Thêm các lệnh deploy của bạn ở đây
+  only:
+    - main  # Chỉ chạy khi push lên nhánh main
+  dependencies:
+    - build
